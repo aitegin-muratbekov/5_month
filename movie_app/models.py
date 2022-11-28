@@ -17,6 +17,9 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
+    def average(self):
+        lst = [review.stars for review in self.reviews.all()]
+        return sum(lst) / len(lst) if len(lst) != 0 else f'No reviews'
 
 
 class Review(models.Model):
