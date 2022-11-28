@@ -1,17 +1,31 @@
 from rest_framework import serializers
 from .models import Director, Movie, Review
 
+
 class DirectorSerializers(serializers.ModelSerializer):
+    movies_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Director
         fields = '__all__'
 
-class MovieSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Movie
-        fields = '__all__'
+    def get_movies_count(self, director):
+        return director.movies_count()
+
 
 class ReviewSerializers(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = 'id text stars'.split()
+
+
+class MovieSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = 'id title description duration director'.split()
+
+class MovieWithReviewSerializers(serializers.ModelSerializer):
+    reviews = ReviewSerializers(many=True)
+    class Meta:
+        model = Movie
+        fields = 'id title description duration director reviews'.split()
